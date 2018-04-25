@@ -1,0 +1,111 @@
+--------------------------------------------------------
+-- Archivo creado  - miércoles-abril-25-2018   
+--------------------------------------------------------
+--------------------------------------------------------
+--  DDL for Table CUSTOMERS
+--------------------------------------------------------
+
+  CREATE TABLE "EJERCICIOS"."CUSTOMERS" 
+   (	"ID" NUMBER(*,0), 
+	"NAME" VARCHAR2(255), 
+	"CITY" VARCHAR2(255), 
+	"GRADE" NUMBER(*,0), 
+	"SALESMAN_ID" NUMBER(*,0)
+   ) ;
+--------------------------------------------------------
+--  DDL for Table ORDERS
+--------------------------------------------------------
+
+  CREATE TABLE "EJERCICIOS"."ORDERS" 
+   (	"ID" NUMBER(*,0), 
+	"AMOUNT" NUMBER(8,2), 
+	"ORDER_DATE" DATE, 
+	"CUSTOMER_ID" NUMBER(*,0), 
+	"SALESMAN_ID" NUMBER(*,0)
+   ) ;
+--------------------------------------------------------
+--  DDL for Table SALESMAN
+--------------------------------------------------------
+
+  CREATE TABLE "EJERCICIOS"."SALESMAN" 
+   (	"ID" NUMBER(*,0), 
+	"NAME" VARCHAR2(255), 
+	"CITY" VARCHAR2(255), 
+	"COMMISSION" NUMBER(5,2)
+   ) ;
+--------------------------------------------------------
+--  DDL for View VIEW_2_PARCIAL
+--------------------------------------------------------
+
+  CREATE OR REPLACE VIEW "EJERCICIOS"."VIEW_2_PARCIAL" ("ORDERS_ID", "ORDERS_ORDER_DATE", "ORDERS_AMOUNT", "CUSTOMERS_ID", "CUSTOMERS_NAME", "SALES_ID", "SALESMAN_NAME", "SALESMAN_COMMISSION") AS 
+  SELECT ORDERS.ID AS ORDERS_ID, ORDERS.ORDER_DATE AS ORDERS_ORDER_DATE, ORDERS.AMOUNT AS ORDERS_AMOUNT,
+CUSTOMERS.ID AS CUSTOMERS_ID, CUSTOMERS.NAME AS CUSTOMERS_NAME, SALESMAN.ID AS SALES_ID,
+SALESMAN.NAME AS SALESMAN_NAME, SALESMAN.COMMISSION AS SALESMAN_COMMISSION
+    
+FROM ORDERS INNER JOIN CUSTOMERS ON ORDERS.CUSTOMER_ID = CUSTOMERS.ID INNER JOIN SALESMAN ON ORDERS.SALESMAN_ID = SALESMAN.ID
+;
+--------------------------------------------------------
+--  DDL for View VIEW_3_PARCIAL
+--------------------------------------------------------
+
+  CREATE OR REPLACE VIEW "EJERCICIOS"."VIEW_3_PARCIAL" ("CUSTOMERS_ID", "CUSTOMERS_NAME", "SALESMAN_ID", "SALESMAN_NAME") AS 
+  SELECT CUSTOMERS.ID AS CUSTOMERS_ID, CUSTOMERS.NAME AS CUSTOMERS_NAME, SALESMAN.ID AS SALESMAN_ID,
+       SALESMAN.NAME AS SALESMAN_NAME
+    
+FROM CUSTOMERS LEFT OUTER JOIN SALESMAN ON CUSTOMERS.SALESMAN_ID= SALESMAN.ID 
+  
+
+WHERE (CUSTOMERS.GRADE <300) AND (SALESMAN.ID IS NULL) OR (SALESMAN.ID IS NOT NULL)
+
+ORDER BY CUSTOMERS.GRADE ASC
+;
+--------------------------------------------------------
+--  DDL for Index SYS_C007026
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EJERCICIOS"."SYS_C007026" ON "EJERCICIOS"."SALESMAN" ("ID") 
+  ;
+--------------------------------------------------------
+--  DDL for Index SYS_C007031
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EJERCICIOS"."SYS_C007031" ON "EJERCICIOS"."CUSTOMERS" ("ID") 
+  ;
+--------------------------------------------------------
+--  DDL for Index SYS_C007034
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EJERCICIOS"."SYS_C007034" ON "EJERCICIOS"."ORDERS" ("ID") 
+  ;
+--------------------------------------------------------
+--  Constraints for Table CUSTOMERS
+--------------------------------------------------------
+
+  ALTER TABLE "EJERCICIOS"."CUSTOMERS" ADD PRIMARY KEY ("ID") ENABLE;
+  ALTER TABLE "EJERCICIOS"."CUSTOMERS" MODIFY ("ID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table ORDERS
+--------------------------------------------------------
+
+  ALTER TABLE "EJERCICIOS"."ORDERS" ADD PRIMARY KEY ("ID") ENABLE;
+  ALTER TABLE "EJERCICIOS"."ORDERS" MODIFY ("ID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table SALESMAN
+--------------------------------------------------------
+
+  ALTER TABLE "EJERCICIOS"."SALESMAN" ADD PRIMARY KEY ("ID") ENABLE;
+  ALTER TABLE "EJERCICIOS"."SALESMAN" MODIFY ("ID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Ref Constraints for Table CUSTOMERS
+--------------------------------------------------------
+
+  ALTER TABLE "EJERCICIOS"."CUSTOMERS" ADD CONSTRAINT "FK_SALESMAN_ID_CUSTOMERS" FOREIGN KEY ("SALESMAN_ID")
+	  REFERENCES "EJERCICIOS"."SALESMAN" ("ID") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table ORDERS
+--------------------------------------------------------
+
+  ALTER TABLE "EJERCICIOS"."ORDERS" ADD CONSTRAINT "FK_CUSTOMER_ID_ORDERS" FOREIGN KEY ("CUSTOMER_ID")
+	  REFERENCES "EJERCICIOS"."CUSTOMERS" ("ID") ENABLE;
+  ALTER TABLE "EJERCICIOS"."ORDERS" ADD CONSTRAINT "FK_SALESMAN_ID_ORDERS" FOREIGN KEY ("SALESMAN_ID")
+	  REFERENCES "EJERCICIOS"."SALESMAN" ("ID") ENABLE;
