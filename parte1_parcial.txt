@@ -1,0 +1,15 @@
+CREATE TABLESPACE mid_term DATAFILE 
+'C:\mid_term\juancarmona.dbf' SIZE 35M;
+
+CREATE PROFILE examen LIMIT 
+  SESSIONS_PER_USER                 1  
+  IDLE_TIME                        15   
+  FAILED_LOGIN_ATTEMPTS             1 ;  
+  
+CREATE USER ejercicios
+IDENTIFIED BY ejercicios
+DEFAULT TABLESPACE mid_term
+QUOTA UNLIMITED ON mid_term
+PROFILE examen; 
+GRANT DBA TO ejercicios;
+GRANT CONNECT TO ejercicios;
